@@ -1,0 +1,112 @@
+{
+  "_note": "Synthetic mock data for educational and portfolio use only. No real patient information.",
+  "patients": [
+    {
+      "patient_id": "P001",
+      "raw_clinical_note": "67-year-old female with history of Type 2 Diabetes Mellitus, diagnosed 8 years ago. Currently on Metformin 500mg twice daily. Last HbA1c measured at 8.9%, above the target of 7.0%. Patient has not been seen in clinic for 45 days. eGFR last recorded at 75 mL/min/1.73m2, indicating normal renal function. No acute complaints reported. Patient reports occasional missed doses of medication.",
+      "structured_truth": {
+        "patient_id": "P001",
+        "age": 67,
+        "gender": "Female",
+        "primary_diagnosis": "Type 2 Diabetes Mellitus",
+        "secondary_diagnosis": [],
+        "medications": ["Metformin 500mg BID"],
+        "hba1c": 8.9,
+        "egfr": 75,
+        "days_since_last_visit": 45,
+        "expected_risk_level": "Medium",
+        "expected_safety_flags": []
+      }
+    },
+    {
+      "patient_id": "P002",
+      "raw_clinical_note": "54-year-old male with Hypertension, well-controlled on Lisinopril 10mg daily. Most recent visit was 12 days ago, blood pressure recorded at 128/82. eGFR 80 mL/min/1.73m2. No diabetes history, HbA1c not applicable. Patient reports good medication adherence and no new symptoms.",
+      "structured_truth": {
+        "patient_id": "P002",
+        "age": 54,
+        "gender": "Male",
+        "primary_diagnosis": "Hypertension",
+        "secondary_diagnosis": [],
+        "medications": ["Lisinopril 10mg daily"],
+        "hba1c": null,
+        "egfr": 80,
+        "days_since_last_visit": 12,
+        "expected_risk_level": "Low",
+        "expected_safety_flags": []
+      }
+    },
+    {
+      "patient_id": "P003",
+      "raw_clinical_note": "72-year-old female with Congestive Heart Failure (NYHA Class II) and Type 2 Diabetes Mellitus. Current medications include Furosemide 40mg daily and Metformin 1000mg twice daily. Most recent HbA1c is 9.2%, indicating poor glycemic control. eGFR measured at 25 mL/min/1.73m2, indicating stage 4 chronic kidney disease. Patient has not been seen in clinic for 89 days. No recent BNP or BMP on file.",
+      "structured_truth": {
+        "patient_id": "P003",
+        "age": 72,
+        "gender": "Female",
+        "primary_diagnosis": "Congestive Heart Failure",
+        "secondary_diagnosis": ["Type 2 Diabetes Mellitus"],
+        "medications": ["Furosemide 40mg daily", "Metformin 1000mg BID"],
+        "hba1c": 9.2,
+        "egfr": 25,
+        "days_since_last_visit": 89,
+        "expected_risk_level": "High",
+        "expected_safety_flags": [
+          "Metformin contraindicated — eGFR below 30, risk of lactic acidosis"
+        ]
+      }
+    },
+    {
+      "patient_id": "P004",
+      "raw_clinical_note": "61-year-old male with Type 2 Diabetes Mellitus, managed with Insulin Glargine 20 units nightly. HbA1c recorded at 7.1%, near target. eGFR 68 mL/min/1.73m2, normal renal function. Last visit was 30 days ago. Patient reports stable blood glucose readings at home.",
+      "structured_truth": {
+        "patient_id": "P004",
+        "age": 61,
+        "gender": "Male",
+        "primary_diagnosis": "Type 2 Diabetes Mellitus",
+        "secondary_diagnosis": [],
+        "medications": ["Insulin Glargine 20 units nightly"],
+        "hba1c": 7.1,
+        "egfr": 68,
+        "days_since_last_visit": 30,
+        "expected_risk_level": "Low",
+        "expected_safety_flags": []
+      }
+    },
+    {
+      "patient_id": "P005",
+      "raw_clinical_note": "45-year-old female with mild persistent Asthma, using Albuterol inhaler as needed. No diabetes or hypertension history. eGFR 95 mL/min/1.73m2. Last visit was 10 days ago for routine follow-up. No acute exacerbations reported in the last 6 months.",
+      "structured_truth": {
+        "patient_id": "P005",
+        "age": 45,
+        "gender": "Female",
+        "primary_diagnosis": "Asthma",
+        "secondary_diagnosis": [],
+        "medications": ["Albuterol inhaler PRN"],
+        "hba1c": null,
+        "egfr": 95,
+        "days_since_last_visit": 10,
+        "expected_risk_level": "Low",
+        "expected_safety_flags": []
+      }
+    },
+    {
+      "patient_id": "P006",
+      "raw_clinical_note": "80-year-old male with Chronic Kidney Disease Stage 4 and Atrial Fibrillation. Current medications include Digoxin 0.25mg daily and Lisinopril 10mg daily. eGFR measured at 22 mL/min/1.73m2. No HbA1c on file, patient is not diabetic. Patient has not been seen in clinic for 120 days. No recent digoxin level on file.",
+      "structured_truth": {
+        "patient_id": "P006",
+        "age": 80,
+        "gender": "Male",
+        "primary_diagnosis": "Chronic Kidney Disease Stage 4",
+        "secondary_diagnosis": ["Atrial Fibrillation"],
+        "medications": ["Digoxin 0.25mg daily", "Lisinopril 10mg daily"],
+        "hba1c": null,
+        "egfr": 22,
+        "days_since_last_visit": 120,
+        "expected_risk_level": "High",
+        "expected_safety_flags": [
+          "Digoxin requires dose adjustment — eGFR below 30 increases risk of digoxin toxicity",
+          "Care gap of 120 days exceeds safe follow-up window for CKD Stage 4 patient"
+        ]
+      }
+    }
+  ]
+}
