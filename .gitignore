@@ -1,0 +1,23 @@
+# secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*env/
+
+# generated vector stores (rebuild with build_vectorstore.py)
+guideline_chroma_db*/
+
+# notebooks and old drafts kept only on my laptop
+*.ipynb
+.ipynb_checkpoints/
+nodes-old.py
+nodes-keyword-version.py
+build_vectorstore-*.py
+*.docx
+
+# Mac
+.DS_Store

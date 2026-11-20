@@ -1,9 +1,12 @@
 """
 LangGraph wiring for the Patient Risk Flagging Agent.
 
-Run this in your own notebook/environment where langgraph and
-langchain are installed. This file assumes nodes.py is in the
-same folder.
+Run it from this folder:
+
+    python graph.py
+
+It runs all 6 mock patients. Build the vector store first with
+build_vectorstore.py, and put OPENAI_API_KEY in a .env file.
 """
 
 from typing import TypedDict, List, Optional
@@ -31,7 +34,7 @@ class PatientRiskState(TypedDict):
     medications: List[str]
     hba1c: Optional[float]
     egfr: Optional[float]
-    days_since_last_visit: int
+    days_since_last_visit: Optional[int]
     guideline_context: str
     safety_flags: List[str]
     risk_level: str
@@ -74,9 +77,10 @@ if __name__ == "__main__":
     with open("mock_patients.json") as f:
         data = json.load(f)
 
-    # Note: this calls extract_patient_data_node, which calls a real LLM.
-    # Set OPENAI_API_KEY in your environment before running this.
+    # This calls a real LLM for each patient. nodes.py loads
+    # OPENAI_API_KEY from the .env file.
     for entry in data["patients"]:
         initial_state = {"patient_id": entry["patient_id"], "raw_clinical_note": entry["raw_clinical_note"]}
         result = app.invoke(initial_state)
-        print(json.dumps(result["final_output"], indent=2))
+        #print(json.dumps(result["final_output"], indent=2))
+        print(json.dumps(result["final_output"], indent=2, ensure_ascii=False))

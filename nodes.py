@@ -9,6 +9,10 @@ dict and returns the full (updated) state dict.
 
 import datetime
 
+from dotenv import load_dotenv
+
+load_dotenv()  # reads OPENAI_API_KEY from the .env file in this folder
+
 
 # ---------------------------------------------------------------------
 # NODE 1 — Extract patient data (calls an LLM — needs OPENAI_API_KEY)
@@ -28,7 +32,7 @@ Return this exact schema:
   "medications": [array of strings],
   "hba1c": number or null,
   "egfr": number or null,
-  "days_since_last_visit": number
+  "days_since_last_visit": number or null
 }}"""
 
 
@@ -123,9 +127,9 @@ def retrieve_guidelines_keyword_fallback(state: dict) -> dict:
 def check_medication_safety(patient: dict) -> list:
     """Pure function, already tested against all 6 mock patients."""
     flags = []
-    medications = patient.get("medications", [])
+    medications = patient.get("medications") or []
     egfr = patient.get("egfr")
-    days_since_last_visit = patient.get("days_since_last_visit", 0)
+    days_since_last_visit = patient.get("days_since_last_visit")
     diagnosis = (patient.get("primary_diagnosis") or "").lower()
 
     if egfr is not None and egfr < 30:
@@ -138,7 +142,7 @@ def check_medication_safety(patient: dict) -> list:
 
     high_complexity_terms = ["chronic kidney disease", "ckd", "congestive heart failure"]
     is_complex = any(term in diagnosis for term in high_complexity_terms)
-    if is_complex and days_since_last_visit > 90:
+    if is_complex and days_since_last_visit is not None and days_since_last_visit > 90:
         flags.append(
             f"Care gap of {days_since_last_visit} days exceeds safe follow-up "
             f"window for {patient.get('primary_diagnosis')} patient"
@@ -161,7 +165,7 @@ def score_risk(state: dict) -> dict:
     """A medication safety flag is automatically High. Otherwise score HbA1c + care gap."""
     safety_flags = state.get("safety_flags", [])
     hba1c = state.get("hba1c")
-    days_since_last_visit = state.get("days_since_last_visit", 0)
+    days_since_last_visit = state.get("days_since_last_visit")
 
     if safety_flags:
         state["risk_level"] = "High"
@@ -179,7 +183,11 @@ def score_risk(state: dict) -> dict:
             score += 1
             reasons.append(f"HbA1c of {hba1c} is above target")
 
-    if days_since_last_visit > 90:
+    if days_since_last_visit is None:
+        # The note didn't say when the last visit was. Don't guess 0 days,
+        # because that would quietly hide a possible care gap.
+        reasons.append("Last visit date not found in the note, so the care gap could not be checked")
+    elif days_since_last_visit > 90:
         score += 2
         reasons.append(f"{days_since_last_visit} days since last visit is significantly overdue")
     elif days_since_last_visit > 60:
@@ -194,6 +202,9 @@ def score_risk(state: dict) -> dict:
         state["risk_level"] = "Low"
 
     state["risk_reason"] = "; ".join(reasons) if reasons else "No significant risk factors identified"
+    if days_since_last_visit is None and state["risk_level"] == "Low":
+        # Unknown visit history shouldn't be reported as low risk with no follow-up.
+        state["risk_level"] = "Medium"
     return state
 
 
