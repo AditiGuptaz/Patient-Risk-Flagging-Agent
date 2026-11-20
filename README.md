@@ -171,4 +171,4 @@ The most important design decision in the whole project isn't a model choice —
 
 ---
 
-*All patient data in this project is synthetic, created for educational and portfolio purposes only.*
+*All patient data in this project is synthetic created intentionally*
